@@ -20,9 +20,27 @@ jobs:
         sudo apt-get update &&
         sudo apt-get install gnat gprbuild
 
-    - name: Build
-      run: gprbuild -j0 -p
-            - name: Java-for-kids
+    name: test
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - run: yarn install
+
+      - run: yarn lint
+
+      - uses: getsentry/action-git-diff-suggestions@main
+        with:
+          message: eslint
+
+      - run: yarn test
   uses: actions/setup-java@v3.13.0
   with:
     # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
